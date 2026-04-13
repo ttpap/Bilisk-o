@@ -643,48 +643,92 @@
     }
 
     /* ── GALLERY ── */
-    #galeria {
-      padding: 100px 0;
-      background: var(--cream);
+    #galeria { padding: 100px 0; background: var(--cream); }
+
+    .gallery-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+
+    .gf-btn {
+      padding: 8px 20px;
+      border: 2px solid var(--ivory);
+      background: var(--ivory);
+      color: var(--warm);
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
     }
+    .gf-btn:hover  { border-color: var(--yellow); }
+    .gf-btn.active { background: var(--dark); border-color: var(--dark); color: var(--yellow); }
 
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: 220px 220px;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .gallery-item {
-      overflow: hidden;
+    .gallery-card {
       position: relative;
+      overflow: hidden;
       background: var(--ivory);
+      aspect-ratio: 1;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; display: block; }
+    .gallery-card:hover img { transform: scale(1.07); }
+
+    .gallery-card .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(28,20,16,.45);
+      opacity: 0;
+      transition: opacity .3s;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #fff;
+      font-size: 1.4rem;
     }
+    .gallery-card:hover .card-overlay { opacity: 1; }
+    .gallery-card.hidden { display: none; }
 
-    .gallery-item:first-child {
-      grid-column: span 2;
-      grid-row: span 2;
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,.93);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
-
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform .5s;
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 88vw; max-height: 86vh; object-fit: contain; border-radius: 4px; }
+    .lb-close {
+      position: fixed; top: 18px; right: 22px;
+      color: #fff; font-size: 2rem; cursor: pointer;
+      background: none; border: none; opacity: .7; transition: opacity .2s;
     }
-
-    .gallery-item:hover img { transform: scale(1.05); }
-
-    .gallery-placeholder {
-      font-size: 2.5rem;
-      opacity: .3;
+    .lb-close:hover { opacity: 1; }
+    .lb-nav {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,.1); border: none; color: #fff;
+      font-size: 1.8rem; width: 48px; height: 64px; cursor: pointer;
+      border-radius: 4px; transition: background .2s;
     }
-
-    .gallery-item.featured {
-      background: var(--dark);
+    .lb-nav:hover { background: rgba(255,255,255,.25); }
+    .lb-prev { left: 10px; }
+    .lb-next { right: 10px; }
+    .lb-caption {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,.6); font-size: .75rem; letter-spacing: 2px;
+      text-transform: uppercase; font-weight: 700; white-space: nowrap;
     }
 
     /* ── CONTACT ── */
@@ -1065,36 +1109,141 @@
   <!-- GALLERY -->
   <section id="galeria">
     <div class="section-wrap">
-      <div style="margin-bottom:48px;">
+      <div style="margin-bottom:40px;">
         <div class="section-label">Galeria</div>
         <h2 class="section-title">Momentos <em>inesquecíveis</em></h2>
       </div>
-      <div class="gallery-grid">
-        <div class="gallery-item featured" style="background:var(--dark);">
-          <img src="biliskao.png" alt="Palhaço Biliskão"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='block';" />
-          <span class="gallery-placeholder" style="display:none;">🤡</span>
-        </div>
-        <div class="gallery-item" style="background:linear-gradient(135deg,var(--red),var(--orange));">
-          <span class="gallery-placeholder" style="font-size:3rem;opacity:.4;">🎈</span>
-        </div>
-        <div class="gallery-item" style="background:linear-gradient(135deg,var(--blue),var(--purple));">
-          <span class="gallery-placeholder" style="font-size:3rem;opacity:.4;">🎪</span>
-        </div>
-        <div class="gallery-item" style="background:linear-gradient(135deg,var(--yellow),var(--orange));">
-          <span class="gallery-placeholder" style="font-size:3rem;opacity:.4;">🤹</span>
-        </div>
-        <div class="gallery-item" style="background:linear-gradient(135deg,var(--green),var(--teal));">
-          <span class="gallery-placeholder" style="font-size:3rem;opacity:.4;">🪄</span>
-        </div>
+
+      <!-- Filter buttons -->
+      <div class="gallery-filters">
+        <button class="gf-btn active" onclick="filterGallery('tudo', this)">Tudo</button>
+        <button class="gf-btn" onclick="filterGallery('shows', this)">🎪 Apresentações</button>
+        <button class="gf-btn" onclick="filterGallery('alemanha', this)">🇩🇪 Alemanha</button>
+        <button class="gf-btn" onclick="filterGallery('finlandia', this)">🇫🇮 Finlândia</button>
+        <button class="gf-btn" onclick="filterGallery('escola', this)">🎓 Escola Nacional</button>
       </div>
+
+      <!-- Grid -->
+      <div class="gallery-grid" id="galleryGrid">
+
+        <!-- Apresentações Diversas -->
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/04793252-c4a6-4ced-bcef-56d1e11bd368.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/04a5fa14-d00b-4f6b-bb43-31b56c23a7e4.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/1cc4d106-f940-4821-bab2-1ffb91737499.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/510f3b0e-8bc5-4336-9fd4-53bd55e0c1f2.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/751b3acc-1d25-4151-8202-ff413a1b4e06.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/76fbce80-12a0-4760-99ab-0a5850f4f204.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/7751118b-99ae-4aca-9ac3-c7f70df45788.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/7c40575c-09e9-4779-9192-35162dc8cd0c.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/951e6ca6-ec5b-42aa-b1fd-aea58bd9e235.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/9976d35c-ab2b-4ce3-8882-f572000ff273.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/cbe42b3f-5684-4ce3-92f6-3610a9fd98b1.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="shows" data-label="Apresentações" onclick="openLightbox(this)"><img src="apresenta%C3%A7%C3%B5es%20diversas/e7c042c3-228b-4f15-aaa1-9bc48fa08f2c.jpeg" alt="Show"><div class="card-overlay">🔍</div></div>
+
+        <!-- Alemanha -->
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/016383ca-cac8-4232-bb55-0be480f33ce8.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/086f6cdc-f41c-412e-90eb-fe4b55caaca3.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/177e8d11-4714-454f-a41b-22d70ab005a3.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/2.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/2fe772b5-600d-450a-9353-99e0c401d32a.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/3.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/38eca596-1b46-4186-b188-5685e8d4ec82.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/4abd0a39-dd55-40dd-a908-4a5c84c8b9a5.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/5df84a90-4d89-43a9-8cc2-95ab2eee02a9.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/7f8c5185-3c19-458f-baba-48b25d6943e2.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/81bc1d42-73d9-4fba-b22e-0e58ab197924.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/9387096b-7f34-491a-ab70-31ba3c1444ed.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/9d1cdf61-fa43-4530-9e82-6dee55d5f218.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/WhatsApp%20Image%202026-04-13%20at%2011.07.48.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/a4d3793d-d17c-4cdd-8785-3782127134dd.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/b534bf8d-ab72-4595-84e2-2e56a2b23df0.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/c2a7897d-6160-42e0-8d88-475c7ab59749.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/c6ccc55f-a826-4cde-8019-0f04dcafec33.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="alemanha" data-label="🇩🇪 Alemanha" onclick="openLightbox(this)"><img src="fotos%20alemanha/f8c5acb2-775d-4a72-8098-780dbc706dcc.jpeg" alt="Alemanha"><div class="card-overlay">🔍</div></div>
+
+        <!-- Finlândia -->
+        <div class="gallery-card" data-cat="finlandia" data-label="🇫🇮 Finlândia" onclick="openLightbox(this)"><img src="fotos%20finlandia/342a2bce-b34b-4175-89c8-2defc0292226.jpeg" alt="Finlândia"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="finlandia" data-label="🇫🇮 Finlândia" onclick="openLightbox(this)"><img src="fotos%20finlandia/558dd599-5805-40e2-9b7e-03964cc7668a.jpeg" alt="Finlândia"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="finlandia" data-label="🇫🇮 Finlândia" onclick="openLightbox(this)"><img src="fotos%20finlandia/67fb6985-4484-4c24-aed0-84df8d0578db.jpeg" alt="Finlândia"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="finlandia" data-label="🇫🇮 Finlândia" onclick="openLightbox(this)"><img src="fotos%20finlandia/74ce4133-5b50-4083-8e29-98d1e60b5dae.jpeg" alt="Finlândia"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="finlandia" data-label="🇫🇮 Finlândia" onclick="openLightbox(this)"><img src="fotos%20finlandia/7edcf2e5-c51b-4849-b9d2-9eadb0c36acb.jpeg" alt="Finlândia"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="finlandia" data-label="🇫🇮 Finlândia" onclick="openLightbox(this)"><img src="fotos%20finlandia/96d68854-490c-4d6b-af77-38659a26d997.jpeg" alt="Finlândia"><div class="card-overlay">🔍</div></div>
+
+        <!-- Escola Nacional de Circo -->
+        <div class="gallery-card" data-cat="escola" data-label="🎓 Escola Nacional de Circo" onclick="openLightbox(this)"><img src="Escola%20Nacional%20de%20Circo/8e642191-1a78-4e14-b3a1-708414b15761.jpeg" alt="Escola Nacional de Circo"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="escola" data-label="🎓 Escola Nacional de Circo" onclick="openLightbox(this)"><img src="Escola%20Nacional%20de%20Circo/c68761a9-ac96-4cbd-9013-67410cb7e20a.jpeg" alt="Escola Nacional de Circo"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="escola" data-label="🎓 Escola Nacional de Circo" onclick="openLightbox(this)"><img src="Escola%20Nacional%20de%20Circo/c7a9aa5e-2fd6-4195-a9db-198ab2e5c2d3.jpeg" alt="Escola Nacional de Circo"><div class="card-overlay">🔍</div></div>
+        <div class="gallery-card" data-cat="escola" data-label="🎓 Escola Nacional de Circo" onclick="openLightbox(this)"><img src="Escola%20Nacional%20de%20Circo/efbdd305-aa47-47bc-805f-7e18a21f5143.jpeg" alt="Escola Nacional de Circo"><div class="card-overlay">🔍</div></div>
+
+      </div>
+
       <div style="text-align:center;margin-top:40px;">
-        <a href="https://www.instagram.com/biliskao28" target="_blank" class="btn-gold" style="display:inline-flex;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Ver mais no Instagram
+        <a href="https://www.instagram.com/biliskao28" target="_blank" class="btn-gold" style="display:inline-flex;gap:10px;align-items:center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Ver mais no Instagram
         </a>
       </div>
     </div>
   </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <button class="lb-nav lb-prev" onclick="event.stopPropagation();navLightbox(-1)">&#8249;</button>
+    <img id="lbImg" src="" alt="" />
+    <button class="lb-nav lb-next" onclick="event.stopPropagation();navLightbox(1)">&#8250;</button>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+
+  <script>
+    let lbCards = [], lbIndex = 0;
+
+    function getVisibleCards() {
+      return [...document.querySelectorAll('.gallery-card:not(.hidden)')];
+    }
+
+    function openLightbox(card) {
+      lbCards = getVisibleCards();
+      lbIndex = lbCards.indexOf(card);
+      showLbImage();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function showLbImage() {
+      const card = lbCards[lbIndex];
+      document.getElementById('lbImg').src = card.querySelector('img').src;
+      document.getElementById('lbCaption').textContent =
+        (card.dataset.label || '') + '  ' + (lbIndex + 1) + ' / ' + lbCards.length;
+    }
+
+    function navLightbox(dir) {
+      lbIndex = (lbIndex + dir + lbCards.length) % lbCards.length;
+      showLbImage();
+    }
+
+    function closeLightbox(e) {
+      if (!e || e.target === document.getElementById('lightbox') || e.target.classList.contains('lb-close')) {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') navLightbox(1);
+      if (e.key === 'ArrowLeft')  navLightbox(-1);
+      if (e.key === 'Escape')     closeLightbox({target: document.getElementById('lightbox')});
+    });
+
+    function filterGallery(cat, btn) {
+      document.querySelectorAll('.gf-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.gallery-card').forEach(card => {
+        card.classList.toggle('hidden', cat !== 'tudo' && card.dataset.cat !== cat);
+      });
+    }
+  </script>
 
   <div class="bar-harlequin"></div>
 
