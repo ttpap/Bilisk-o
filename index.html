@@ -746,6 +746,48 @@
       border-radius: 2px;
     }
 
+    /* ── FLOATING WHATSAPP ── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #25D366;
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: .95rem;
+      box-shadow: 0 6px 24px rgba(37,211,102,.5);
+      transition: transform .2s, box-shadow .2s;
+      animation: pulse-wpp 2.5s ease-in-out infinite;
+    }
+
+    .whatsapp-float:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 32px rgba(37,211,102,.7);
+      animation: none;
+    }
+
+    .whatsapp-float .wpp-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse-wpp {
+      0%, 100% { box-shadow: 0 6px 24px rgba(37,211,102,.5); }
+      50%       { box-shadow: 0 6px 36px rgba(37,211,102,.85); }
+    }
+
+    @media (max-width: 480px) {
+      .whatsapp-float { bottom: 16px; right: 16px; padding: 12px 18px; font-size: .88rem; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       #hero { grid-template-columns: 1fr; }
@@ -1036,6 +1078,13 @@
       </div>
     </div>
   </section>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/5521983142899?text=Ol%C3%A1%20Bilisk%C3%A3o!%20Gostaria%20de%20agendar%20um%20show.%20Pode%20me%20passar%20mais%20informa%C3%A7%C3%B5es%3F"
+     class="whatsapp-float" target="_blank" rel="noopener">
+    <span class="wpp-icon">💬</span>
+    Clique aqui para conversar no WhatsApp
+  </a>
 
   <!-- FOOTER -->
   <footer>
