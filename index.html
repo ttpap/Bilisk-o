@@ -569,6 +569,66 @@
     .stat-item:nth-child(3) .num { color: var(--green); }
     .stat-item:nth-child(4) .num { color: var(--purple); }
 
+    /* About list */
+    .about-list {
+      list-style: none;
+      margin: 0 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .about-list li {
+      font-size: .95rem;
+      color: #5A4535;
+      line-height: 1.6;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .about-list li::before {
+      content: '◆';
+      position: absolute;
+      left: 0;
+      color: var(--yellow);
+      font-size: .55rem;
+      top: 6px;
+    }
+
+    /* About video */
+    .about-video-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-self: center;
+    }
+
+    .about-video-frame {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 3px solid var(--yellow);
+      box-shadow: 6px 6px 0 var(--red);
+    }
+
+    .about-video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .about-video-caption {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--red);
+      text-align: center;
+    }
+
     /* Harlequin mosaic on right side */
     .about-mosaic {
       display: grid;
@@ -943,14 +1003,24 @@
           <h2 class="section-title">34 anos de<br><em>arte circense</em></h2>
 
           <p style="margin-top:24px;">
-            A <strong>Companhia Circense Palhaço Biliskão</strong> nasceu do amor à arte da Commedia dell'arte
-            e à tradição do palhaço brasileiro. Com aquela fantasia inconfundível em losangos coloridos
-            — o mesmo padrão do Arlequim clássico — o Biliskão carrega séculos de teatro popular no peito.
+            Biliskão iniciou sua trajetória artística na dupla <strong>Tico e Teco</strong>, atuando como Teco
+            em interações e apresentações para festas de aniversário. Ao longo do tempo, aprimorou sua
+            linguagem cênica por meio de cursos, oficinas e formação profissional na
+            <strong>Escola de Circo do Rio de Janeiro</strong>.
           </p>
+
+          <p style="margin-bottom:12px;">Entre suas formações e vivências na palhaçaria:</p>
+          <ul class="about-list">
+            <li>Oficina de Palhaçaria com <strong>Antônio Carlos Vasconcelos</strong> (Palhaço Xuxu)</li>
+            <li>Oficina com <strong>Wellington Nogueira</strong>, dos Doutores da Alegria</li>
+            <li>Curso de Palhaço com <strong>Tchesco Villares</strong>, professor da Escola Nacional de Circo</li>
+            <li>Curso de Corpo e Maquiagem com referências do <strong>Cirque du Soleil</strong></li>
+          </ul>
+
           <p>
-            São 34 anos percorrendo o Rio de Janeiro levando alegria, risada e emoção genuína.
-            Cada show é preparado com cuidado, adaptado para o público e o evento.
-            Do bebê ao vovô, todo mundo ganha risada!
+            Integrou a <strong>primeira turma da Escola Nacional de Circo</strong> a receber formação
+            profissional com diplomação na área de Palhaço. Também participou do
+            <strong>Primeiro Festival de Palhaços de Búzios</strong>.
           </p>
 
           <div class="stats-grid">
@@ -973,45 +1043,18 @@
           </div>
         </div>
 
-        <!-- Harlequin mosaic -->
-        <div class="about-mosaic" aria-hidden="true">
-          <!-- Row of colorful diamonds forming a harlequin grid -->
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:1;grid-row:1;"></div>
-          <div class="mosaic-diamond" style="background:var(--blue);grid-column:2;grid-row:1;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:3;grid-row:1;"></div>
-          <div class="mosaic-diamond" style="background:var(--green);grid-column:4;grid-row:1;"></div>
-          <div class="mosaic-diamond" style="background:var(--orange);grid-column:5;grid-row:1;"></div>
-          <div class="mosaic-diamond" style="background:var(--purple);grid-column:6;grid-row:1;"></div>
-          <div class="mosaic-diamond" style="background:var(--blue);grid-column:1;grid-row:2;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:2;grid-row:2;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:3;grid-row:2;"></div>
-          <div class="mosaic-diamond" style="background:var(--purple);grid-column:4;grid-row:2;"></div>
-          <div class="mosaic-diamond" style="background:var(--teal);grid-column:5;grid-row:2;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:6;grid-row:2;"></div>
-          <div class="mosaic-diamond" style="background:var(--green);grid-column:1;grid-row:3;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:2;grid-row:3;"></div>
-          <div class="mosaic-diamond" style="background:var(--blue);grid-column:3;grid-row:3;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:4;grid-row:3;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:5;grid-row:3;"></div>
-          <div class="mosaic-diamond" style="background:var(--green);grid-column:6;grid-row:3;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:1;grid-row:4;"></div>
-          <div class="mosaic-diamond" style="background:var(--purple);grid-column:2;grid-row:4;"></div>
-          <div class="mosaic-diamond" style="background:var(--orange);grid-column:3;grid-row:4;"></div>
-          <div class="mosaic-diamond" style="background:var(--blue);grid-column:4;grid-row:4;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:5;grid-row:4;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:6;grid-row:4;"></div>
-          <div class="mosaic-diamond" style="background:var(--orange);grid-column:1;grid-row:5;"></div>
-          <div class="mosaic-diamond" style="background:var(--teal);grid-column:2;grid-row:5;"></div>
-          <div class="mosaic-diamond" style="background:var(--green);grid-column:3;grid-row:5;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:4;grid-row:5;"></div>
-          <div class="mosaic-diamond" style="background:var(--blue);grid-column:5;grid-row:5;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:6;grid-row:5;"></div>
-          <div class="mosaic-diamond" style="background:var(--red);grid-column:1;grid-row:6;"></div>
-          <div class="mosaic-diamond" style="background:var(--blue);grid-column:2;grid-row:6;"></div>
-          <div class="mosaic-diamond" style="background:var(--yellow);grid-column:3;grid-row:6;"></div>
-          <div class="mosaic-diamond" style="background:var(--green);grid-column:4;grid-row:6;"></div>
-          <div class="mosaic-diamond" style="background:var(--purple);grid-column:5;grid-row:6;"></div>
-          <div class="mosaic-diamond" style="background:var(--orange);grid-column:6;grid-row:6;"></div>
+        <!-- YouTube Video -->
+        <div class="about-video-wrap">
+          <div class="about-video-frame">
+            <iframe
+              src="https://www.youtube.com/embed/G6larOZekmA"
+              title="Palhaço Biliskão"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <p class="about-video-caption">▶ Assista ao Biliskão em ação</p>
         </div>
       </div>
     </div>
